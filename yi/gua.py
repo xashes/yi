@@ -1,21 +1,62 @@
-#!/usr/bin/env python3
+import arcade as ac
+from typing import List
 
-import pyglet
+class YaoSprite(ac.SpriteSolidColor):
+    def __init__(self, width: int, height: int, color, value: int, center_x, center_y):
+        super().__init__(width, height, color)
+        self.value = value
+        self.center_x = center_x
+        self.center_y = center_y
+
+        self.setup()
+
+    def setup(self):
+        self.sprite_list = ac.SpriteList()
+        gap_width = int(self.height * 1/3)
+        height = int(self.height - gap_width)
+        color = ac.color.WHITE
+        x = self.center_x
+        y = self.bottom + int(height * 1/2)
+        position = (x, y)
+
+        gap_color = ac.color.AMAZON
+        gap_sprite = ac.SpriteSolidColor(gap_width, height, gap_color)
+        gap_sprite.position = position
+
+        sprite = ac.SpriteSolidColor(self.width, height, color)
+        sprite.position = position
+
+        self.sprite_list.append(sprite)
+        if self.value == 0:
+            self.sprite_list.append(gap_sprite)
 
 
-class Yao:
-    def __init__(self, color, gap_color, width, height, x, y, batch=None) -> None:
-        yao_image = pyglet.image.SolidColorImagePattern(color).create_image(
-            width, height
-        )
-        yao_image.anchor_x = yao_image.width // 2
-        yao_image.anchor_y = yao_image.height // 2
+    def draw(self):
+        # self.sprite_list.draw()
+        for sprite in self.sprite_list:
+            sprite.draw()
 
-        gap_width = width // 5
-        gap_image = pyglet.image.SolidColorImagePattern(gap_color).create_image(
-            gap_width, height
-        )
-        gap_image.anchor_x = gap_image.width // 2
-        gap_image.anchor_y = gap_image.height // 2
 
-        self.yang_sprite = pyglet.sprite.Sprite(yao_image, x=x, y=y, batch=batch)
+class GuaSprite(ac.SpriteSolidColor):
+    def __init__(self, width: int, yao_height: int, color, values: List[int], center_x: float, center_y: float):
+        height = yao_height * len(values)
+        super().__init__(width, height, color)
+        self.yao_height = yao_height
+        self.values = values
+        self.center_x = center_x
+        self.center_y = center_y
+
+        self.setup()
+
+    def setup(self):
+        self.yao_list = ac.SpriteList()
+        x = self.center_x
+        for i, v in enumerate(self.values):
+            y = self.bottom + i * self.yao_height + 1/2 * self.yao_height
+            yao = YaoSprite(self.width, self.yao_height, self.color, value=v, center_x=x, center_y=y)
+            self.yao_list.append(yao)
+
+    def draw(self):
+        super().draw()
+        for yao in self.yao_list:
+            yao.draw()
