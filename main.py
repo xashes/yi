@@ -8,7 +8,7 @@ HEIGHT = 800
 TITLE = "变卦"
 YAO_WIDTH = 200
 YAO_HEIGHT = 40
-DEFAULT_GUA = [1, 0, 1, 0, 1, 0]
+DEFAULT_GUA = [0, 0, 0, 0, 0, 0]
 BG_COLOR = ac.color.AMAZON
 
 
@@ -20,8 +20,14 @@ class MainWindow(ac.Window):
         ac.set_background_color(BG_COLOR)
         self.gua_list = ac.SpriteList()
 
-        self.gua = GuaSprite(YAO_WIDTH, YAO_HEIGHT, self.background_color,
-                       values=DEFAULT_GUA, center_x=self.width/2, center_y=self.height/2)
+        self.gua = GuaSprite(
+            YAO_WIDTH,
+            YAO_HEIGHT,
+            self.background_color,
+            values=DEFAULT_GUA,
+            center_x=self.width / 2,
+            center_y=self.height / 2,
+        )
         self.gua_list.append(self.gua)
 
     def on_draw(self):
